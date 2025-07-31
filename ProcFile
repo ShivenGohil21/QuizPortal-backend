@@ -1,0 +1,1 @@
+web: PYTHONPATH=. gunicorn quiz_portal.wsgi:application

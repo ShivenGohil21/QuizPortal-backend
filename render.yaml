@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: geo-attend-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: PYTHONPATH=. gunicorn Backend.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: Geo_attend.settings
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: PIP_NO_BUILD_ISOLATION
+        value: "false"
