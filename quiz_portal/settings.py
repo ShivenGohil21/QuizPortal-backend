@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'quiz',
     'corsheaders',  # ✅ Add this
 ]
@@ -54,9 +55,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'quiz_portal.wsgi.application'
 
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-}
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url:
+    DATABASES = {
+        'default': dj_database_url.config(default=database_url, conn_max_age=600)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

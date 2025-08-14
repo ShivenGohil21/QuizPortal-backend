@@ -1,14 +1,20 @@
+databases:
+  - name: quizportal-db
+
 services:
   - type: web
-    name: geo-attend-backend
+    name: quizportal-backend
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: PYTHONPATH=. gunicorn Backend.wsgi:application
+    preDeployCommand: python manage.py migrate && python manage.py collectstatic --noinput && python manage.py seed_quiz
+    startCommand: gunicorn quiz_portal.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: Geo_attend.settings
+        value: quiz_portal.settings
       - key: PYTHON_VERSION
-        value: 3.11
-      - key: PIP_NO_BUILD_ISOLATION
-        value: "false"
+        value: 3.10.12
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quizportal-db
+          property: connectionString
